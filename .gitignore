@@ -1,0 +1,16 @@
+.vscode/
+
+# Compiled bytecode files
+__pycache__/
+*.pyc
+*.pyo
+
+# Local development files
+venv/
+.venv/
+
+*.env
+
+tests.py
+
+traceback.txt
