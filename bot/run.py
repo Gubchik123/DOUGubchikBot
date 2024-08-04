@@ -79,12 +79,12 @@ def _register_routers() -> None:
 
 
 def _register_middlewares() -> None:
-    # LanguageMiddleware(i18n).setup(dispatcher)
+    LanguageMiddleware(i18n).setup(dispatcher)
     # Message middleware
-    # dispatcher.message.middleware(SchedulerMiddleware(scheduler))
+    dispatcher.message.middleware(SchedulerMiddleware(scheduler))
     # CallbackQuery middlewares
     dispatcher.callback_query.middleware(CallbackQueryTimeoutMiddleware())
-    # dispatcher.callback_query.middleware(SchedulerMiddleware(scheduler))
+    dispatcher.callback_query.middleware(SchedulerMiddleware(scheduler))
 
 
 if __name__ == "__main__":
