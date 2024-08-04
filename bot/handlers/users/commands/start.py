@@ -44,7 +44,7 @@ async def _greet_user(message: Message, user_full_name: str):
     await message.answer(
         _(
             "Привіт, {name}!\n"
-            "Я той, хто допоможе Вам відстежувати нові вакансії на сайті dou.ua"
+            "Я той, хто допоможе Вам відстежувати нові вакансії на сайті jobs.dou.ua"
         ).format(name=user_full_name)
     )
     await handle_menu(message)
