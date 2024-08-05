@@ -17,6 +17,7 @@ def create_vacancy_for_(user_chat_id: int, state_data: dict) -> Vacancy:
             id_user_id=user_chat_id,
             active=state_data.get("active", True),
             url_prefix=state_data.get("url_prefix", "vacancies"),
+            last_job_urls=state_data.get("last_job_urls"),
             category=state_data.get("category"),
             exp=state_data.get("exp"),
             city=state_data.get("city"),

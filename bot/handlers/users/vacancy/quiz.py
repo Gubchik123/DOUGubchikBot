@@ -9,6 +9,7 @@ from data.config import ADMINS
 from utils.admins import send_to_admins
 from states.vacancy_quiz import VacancyQuiz
 from utils.db.crud.vacancy import create_vacancy_for_
+from utils.services import update_state_data_with_last_job_urls
 from keyboards.inline.vacancy import quiz as quiz_kb
 from keyboards.inline.maker import make_yes_or_no_inline_keyboard
 
@@ -164,14 +165,27 @@ async def _finish_vacancy_quiz(
     """Finishes the vacancy quiz."""
     user = callback_query.from_user
     data = await state.get_data()
+    update_state_data_with_last_job_urls(state_data=data)
     vacancy = create_vacancy_for_(user_chat_id=user.id, state_data=data)
     await state.clear()
 
     await callback_query.message.edit_text(
         _("Ви успішно заповнили пошукові дані для вакансій!")
     )
+    await callback_query.message.answer_sticker(
+        "CAACAgIAAxkBAAEMmwxmsNJJLRZRhkM8tMv2VvG-a261ZAACrQ0AAqyZIEjdinfy_Yf5cDUE"
+    )
+    await callback_query.message.answer(
+        _("Наразі за вашими критеріями знайдено {count} вакансій.").format(
+            count=vacancy.last_job_urls.count(",") + 1
+        )
+    )
     await handle_vacancy_menu(callback_query.message, vacancy)
+    await _notify_admins_about_new_vacancy_for_(user)
 
+
+async def _notify_admins_about_new_vacancy_for_(user: Message):
+    """Notifies admins about a new vacancy."""
     if user.id not in ADMINS:
         asyncio.create_task(
             send_to_admins(
