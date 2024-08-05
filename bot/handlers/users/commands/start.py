@@ -3,6 +3,7 @@ import asyncio
 from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import CommandStart
+from aiogram.fsm.context import FSMContext
 from aiogram.utils.i18n import gettext as _
 from sqlalchemy.exc import IntegrityError
 
@@ -19,13 +20,13 @@ router = Router()
 
 @router.message(CommandStart())
 @before_handler_clear_state
-async def handle_start_command(message: Message, *args):
+async def handle_start_command(message: Message, state: FSMContext, *args):
     """Handles the /start command.
     Creates a new user in the database if it does not exist."""
     try:
         user = message.from_user
         create_user_by_(user)
-        await _greet_user(message, user.full_name)
+        await _greet_user(message, user.full_name, state)
         if user.id not in ADMINS:
             asyncio.create_task(
                 send_to_admins(
@@ -33,10 +34,12 @@ async def handle_start_command(message: Message, *args):
                 )
             )
     except IntegrityError:  # psycopg2.errors.UniqueViolation
-        await _greet_user(message, message.from_user.full_name)
+        await _greet_user(message, message.from_user.full_name, state)
 
 
-async def _greet_user(message: Message, user_full_name: str):
+async def _greet_user(
+    message: Message, user_full_name: str, state: FSMContext
+):
     """Sends a greeting message to the user."""
     await message.answer_sticker(
         "CAACAgIAAxkBAAEMmOVmriQu5yzwLBHbT9bTPmA3zJCqcQACjg8AAg3GCEprgFmiFwjklzUE"
@@ -47,4 +50,4 @@ async def _greet_user(message: Message, user_full_name: str):
             "Я той, хто допоможе Вам відстежувати нові вакансії на сайті jobs.dou.ua"
         ).format(name=user_full_name)
     )
-    await handle_menu(message)
+    await handle_menu(message, state)
