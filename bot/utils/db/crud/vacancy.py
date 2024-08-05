@@ -10,9 +10,9 @@ from ..db import LocalSession, add_commit_and_refresh
 vacancies_cache: Dict[int, Vacancy] = {}
 
 
-def create_vacancy_for_(user_chat_id: int, state_data: dict):
+def create_vacancy_for_(user_chat_id: int, state_data: dict) -> Vacancy:
     """Creates a new vacancy for user with the given user chat id."""
-    add_commit_and_refresh(
+    return add_commit_and_refresh(
         Vacancy(
             id_user_id=user_chat_id,
             active=state_data.get("active", True),
