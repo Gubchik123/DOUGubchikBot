@@ -1,4 +1,4 @@
-from typing import Dict, Union
+from typing import Dict, List, Union
 
 from sqlalchemy import update
 from sqlalchemy.orm import Session
@@ -50,6 +50,12 @@ def get_vacancy_by_(user_chat_id: int) -> Union[Vacancy, None]:
         if vacancy is not None:
             vacancies_cache[user_chat_id] = vacancy
     return vacancy
+
+
+def get_all_active_vacancies() -> List[Vacancy]:
+    """Returns all active vacancies."""
+    with LocalSession() as session:
+        return session.query(Vacancy).filter(Vacancy.active).all()
 
 
 def update_vacancy_with_(user_chat_id: int, **fields):

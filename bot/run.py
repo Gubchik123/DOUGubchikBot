@@ -7,9 +7,10 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 
 from utils.db.db import Base, engine
-from utils.admins import notify_admins_on_startup_of_
 from utils.error import send_message_about_error
+from utils.admins import notify_admins_on_startup_of_
 from utils.bot_commands import set_default_commands_for_
+from utils.scheduler import check_vacancies_for_all_users
 from middlewares import (
     LanguageMiddleware,
     SchedulerMiddleware,
@@ -65,13 +66,21 @@ async def on_startup() -> None:
     """Runs useful functions on bot startup."""
     Base.metadata.create_all(bind=engine)
 
-    scheduler.start()
-    scheduler.print_jobs()
-
+    _start_scheduler()
     _register_routers()
     _register_middlewares()
     await set_default_commands_for_(bot)
     await notify_admins_on_startup_of_(bot)
+
+
+def _start_scheduler() -> None:
+    """Starts the scheduler and adds interval job."""
+    scheduler.start()
+    scheduler.remove_all_jobs()
+    scheduler.scheduled_job(trigger="interval", hours=1)(
+        check_vacancies_for_all_users
+    )
+    scheduler.print_jobs()
 
 
 def _register_routers() -> None:
