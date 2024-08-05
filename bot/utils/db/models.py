@@ -49,5 +49,5 @@ class Vacancy(Base):
     city = Column(String(30), nullable=True)
     remote = Column(Boolean, default=False)
     relocate = Column(Boolean, default=False)
+    search = Column(Text, nullable=True)
     descr = Column(Boolean, default=False)
-    search = Column(String(30), nullable=True)
