@@ -1,27 +1,21 @@
-from typing import Union
-
-from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery
+from aiogram import Router
+from aiogram.types import Message
+from aiogram.fsm.context import FSMContext
 from aiogram.utils.i18n import gettext as _
 
-# from keyboards.default.menu import get_menu_keyboard
+from utils.db.crud.vacancy import get_vacancy_by_
+
+from .vacancy.quiz import start_vacancy_quiz
+from .vacancy.menu import handle_vacancy_menu
 
 
 router = Router()
 
 
-@router.callback_query(F.data == "btn_menu")
-async def handle_menu(event: Union[Message, CallbackQuery]) -> None:
+async def handle_menu(message: Message, state: FSMContext):
     """Handles main menu."""
-    is_callback_query = isinstance(event, CallbackQuery)
-    message = event.message if is_callback_query else event
-
-    if is_callback_query:
-        await message.delete()
-    await message.answer(
-        _(
-            "Ви у головному меню.\n"
-            "Виберіть подальші дії за допомогою кнопок нижче."
-        ),
-        # reply_markup=get_menu_keyboard(),
-    )
+    vacancy = get_vacancy_by_(message.from_user.id)
+    if vacancy:
+        await handle_vacancy_menu(message, vacancy)
+    else:
+        await start_vacancy_quiz(message, state)
