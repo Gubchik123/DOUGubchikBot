@@ -20,13 +20,13 @@ def get_cities_inline_keyboard() -> InlineKeyboardMarkup:
     inline_keyboard_builder = make_inline_keyboard_builder_for_list_of_(
         CITIES, 3, callback
     )
-    inline_keyboard_builder.add(
+    inline_keyboard_builder.row(
         InlineKeyboardButton(
             text=_("Віддалена робота"),
             callback_data=f"btn_{callback}:remote",
         )
     )
-    inline_keyboard_builder.add(
+    inline_keyboard_builder.row(
         InlineKeyboardButton(
             text=_("За кордоном"),
             callback_data=f"btn_{callback}:relocate",
