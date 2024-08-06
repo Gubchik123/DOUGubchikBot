@@ -175,9 +175,10 @@ async def _finish_vacancy_quiz(
     await callback_query.message.answer_sticker(
         "CAACAgIAAxkBAAEMmwxmsNJJLRZRhkM8tMv2VvG-a261ZAACrQ0AAqyZIEjdinfy_Yf5cDUE"
     )
+    count = vacancy.last_job_urls.count(",")
     await callback_query.message.answer(
         _("Наразі за вашими критеріями знайдено {count} вакансій.").format(
-            count=vacancy.last_job_urls.count(",") + 1
+            count=count + 1 if count else 0
         )
     )
     await handle_vacancy_menu(callback_query.message, vacancy)
