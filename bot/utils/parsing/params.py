@@ -21,5 +21,7 @@ class Params(NamedTuple):
         else:
             prefix = "?"
         return prefix + "&".join(
-            f"{key}={value}" for key, value in self._asdict().items() if value
+            f"{key}={value}"
+            for key, value in self._asdict().items()
+            if value and key not in ("remote", "relocate")
         )
