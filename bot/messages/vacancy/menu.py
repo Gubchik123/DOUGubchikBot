@@ -24,5 +24,5 @@ def get_vacancy_menu_message_by_(vacancy: Vacancy) -> str:
         exp=_("Без досвіду") if not vacancy.exp else vacancy.exp,
         city=city,
         search="-" if not vacancy.search else vacancy.search,
-        descr=_("(шукати в описі вакансій)") if vacancy.descr else "",
+        descr=_("(шукати в описах вакансій)") if vacancy.descr else "",
     )
