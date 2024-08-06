@@ -6,6 +6,7 @@ from aiogram.utils.i18n import gettext as _, lazy_gettext as __
 
 from utils.decorators import vacancy_required
 from utils.scheduler import check_vacancies_by_
+from utils.services import get_url_with_params_for_
 from utils.db.models import Vacancy
 from utils.db.crud.vacancy import update_vacancy_with_
 from messages.vacancy.menu import get_vacancy_menu_message_by_
@@ -56,3 +57,10 @@ async def handle_check_vacancies(message: Message, vacancy: Vacancy, *args):
             )
         )
         await message.answer(_("Нових вакансій не знайдено!"))
+
+
+@router.message(F.text.lower() == __("отримати посилання"))
+@vacancy_required
+async def handle_get_link(message: Message, vacancy: Vacancy, *args):
+    """Handles the get link button."""
+    await message.answer(get_url_with_params_for_(vacancy))
