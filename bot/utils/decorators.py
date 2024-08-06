@@ -64,12 +64,14 @@ def optional_temp_bot_handler(func: Callable):
             )
             kwargs["temp_bot"] = temp_bot
 
+        result = None
         try:
-            await func(*args, **kwargs)
+            result = await func(*args, **kwargs)
         finally:
             if is_temp_bot_none:
                 await temp_bot.session.close()
                 del temp_bot
+            return result
 
     return wrapper
 

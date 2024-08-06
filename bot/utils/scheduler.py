@@ -30,7 +30,7 @@ async def check_vacancies_for_all_users():
 @optional_temp_bot_handler
 async def check_vacancies_by_(
     vacancy: Vacancy, temp_bot: Optional[Bot] = None
-):
+) -> bool:
     try:
         params = Params(
             category=vacancy.category,
@@ -68,6 +68,7 @@ async def check_vacancies_by_(
                 user_chat_id=vacancy.id_user_id,
                 last_job_urls=",".join(vacancies.keys()),
             )
+            return True
     except TelegramForbiddenError:
         delete_user_with_(vacancy.id_user_id)
     except Exception as error:
@@ -76,3 +77,4 @@ async def check_vacancies_by_(
             get_traceback_file_path(),
             temp_bot=temp_bot,
         )
+    return False
