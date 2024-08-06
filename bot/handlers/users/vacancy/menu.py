@@ -26,3 +26,11 @@ async def handle_search_job(message: Message, vacancy: Vacancy, *args):
     """Handles the search job button."""
     update_vacancy_with_(user_chat_id=vacancy.id_user_id, active=True)
     await handle_vacancy_menu(message, vacancy)
+
+
+@router.message(F.text.lower() == __("не шукаю роботу"))
+@vacancy_required
+async def handle_not_search_job(message: Message, vacancy: Vacancy, *args):
+    """Handles the not search job button."""
+    update_vacancy_with_(user_chat_id=vacancy.id_user_id, active=False)
+    await handle_vacancy_menu(message, vacancy)
