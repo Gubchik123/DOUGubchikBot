@@ -2,15 +2,16 @@ from random import choice
 
 from aiogram import Router, F
 from aiogram.types import Message
+from aiogram.fsm.context import FSMContext
 from aiogram.utils.i18n import gettext as _, lazy_gettext as __
 
+from messages.vacancy.menu import get_vacancy_menu_message_by_
+from keyboards.default.vacancy.menu import get_vacancy_menu_keyboard
 from utils.decorators import vacancy_required
 from utils.scheduler import check_vacancies_by_
 from utils.services import get_url_with_params_for_
 from utils.db.models import Vacancy
-from utils.db.crud.vacancy import update_vacancy_with_
-from messages.vacancy.menu import get_vacancy_menu_message_by_
-from keyboards.default.vacancy.menu import get_vacancy_menu_keyboard
+from utils.db.crud.vacancy import update_vacancy_with_, delete_vacancy_with_
 
 
 router = Router()
@@ -64,3 +65,15 @@ async def handle_check_vacancies(message: Message, vacancy: Vacancy, *args):
 async def handle_get_link(message: Message, vacancy: Vacancy, *args):
     """Handles the get link button."""
     await message.answer(get_url_with_params_for_(vacancy))
+
+
+@router.message(F.text.lower() == __("перезаповнити анкету"))
+@vacancy_required
+async def handle_restart_vacancy_quiz(
+    message: Message, vacancy: Vacancy, state: FSMContext
+):
+    """Handles the restart vacancy quiz button."""
+    from .quiz import start_vacancy_quiz
+
+    delete_vacancy_with_(user_chat_id=vacancy.id_user_id)
+    await start_vacancy_quiz(message, state)
