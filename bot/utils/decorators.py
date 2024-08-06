@@ -10,6 +10,7 @@ from aiogram.client.default import DefaultBotProperties
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from data.config import BOT_TOKEN
+from utils.db.crud.vacancy import get_vacancy_by_
 
 
 def command_argument_required(convert: Optional[type] = str) -> Callable:
@@ -69,5 +70,21 @@ def optional_temp_bot_handler(func: Callable):
             if is_temp_bot_none:
                 await temp_bot.session.close()
                 del temp_bot
+
+    return wrapper
+
+
+def vacancy_required(handler: Callable) -> None:
+    async def wrapper(message: Message, state: FSMContext) -> None:
+        vacancy = get_vacancy_by_(user_chat_id=message.chat.id)
+        if vacancy is None:
+            await message.answer(
+                "Спочатку заповніть пошукові дані для вакансій :)"
+            )
+            from handlers.users.vacancy.quiz import start_vacancy_quiz
+
+            await start_vacancy_quiz(message, state)
+        else:
+            await handler(message, vacancy, state)
 
     return wrapper
