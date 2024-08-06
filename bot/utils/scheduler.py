@@ -8,8 +8,8 @@ from data.config import BOT_TOKEN
 
 from .admins import send_to_admins
 from .error import get_traceback_file_path
+from .services import get_url_with_params_for_
 from .decorators import optional_temp_bot_handler
-from .parsing.params import Params
 from .parsing.jobs_dou import parse_dou_vacancies_from_
 from .db.models import Vacancy
 from .db.crud.user import delete_user_with_
@@ -32,17 +32,8 @@ async def check_vacancies_by_(
     vacancy: Vacancy, temp_bot: Optional[Bot] = None
 ) -> bool:
     try:
-        params = Params(
-            category=vacancy.category,
-            exp=vacancy.exp,
-            city=vacancy.city,
-            remote=vacancy.remote,
-            relocate=vacancy.relocate,
-            descr=vacancy.descr,
-            search=vacancy.search,
-        )
         vacancies = parse_dou_vacancies_from_(
-            url=f"https://jobs.dou.ua/{vacancy.url_prefix}/{params}"
+            url=get_url_with_params_for_(vacancy)
         )
         message_text = ""
         for vacancy_url, vacancy_data in vacancies.items():
