@@ -71,3 +71,14 @@ def update_vacancy_with_(user_chat_id: int, **fields):
     if user_chat_id in vacancies_cache:
         for field, value in fields.items():
             setattr(vacancies_cache[user_chat_id], field, value)
+
+
+def delete_vacancy_with_(user_chat_id: int):
+    """Deletes a vacancy with the given user chat id."""
+    with LocalSession() as session:
+        vacancy = _get_vacancy_by_(session, user_chat_id)
+        session.delete(vacancy)
+        session.commit()
+
+    if user_chat_id in vacancies_cache:
+        del vacancies_cache[user_chat_id]
