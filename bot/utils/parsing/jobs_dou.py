@@ -1,17 +1,27 @@
+import logging
 from collections import OrderedDict
 
 import requests
+import cloudscraper
 from bs4 import BeautifulSoup
 from user_agent import generate_user_agent
+
+from data.config import COOKIES, HEADERS
 
 
 def parse_dou_vacancies_from_(url: str):
     """Parses vacancies from DOU by the given params and language code."""
-    response = requests.get(url, headers={"user-agent": generate_user_agent()})
+    HEADERS["user-agent"] = generate_user_agent()
+    response = requests.get(url, headers=HEADERS, cookies=COOKIES)
 
     if response.ok:
         return _parse_(response.text)
-    raise ValueError("Response is not OK")
+    if response.status_code == 403:
+        tokens, user_agent = cloudscraper.get_tokens(
+            "https://jobs.dou.ua/vacancies/"
+        )
+        logging.info(f"Tokens: {tokens=}, {user_agent=}")
+    raise ValueError(f"Response is not OK: {response.status_code}")
 
 
 def _parse_(html: str):

@@ -1,4 +1,5 @@
 import os
+import json
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -28,3 +29,6 @@ DEFAULT_TIMEZONE = os.getenv("TIMEZONE", "Europe/Kiev")
 #     for dir in os.walk(LOCALES_DIR)
 #     if len(os.path.basename(dir[0])) == 2
 # ]
+
+COOKIES = json.loads(os.getenv("COOKIES", "{}"))
+HEADERS = json.loads(os.getenv("HEADERS", "{}"))
