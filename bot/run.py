@@ -77,7 +77,7 @@ def _start_scheduler() -> None:
     """Starts the scheduler and adds interval job."""
     scheduler.start()
     scheduler.remove_all_jobs()
-    scheduler.scheduled_job(trigger="interval", hours=1)(
+    scheduler.scheduled_job(trigger="interval", hours=3)(
         check_vacancies_for_all_users
     )
     scheduler.print_jobs()
