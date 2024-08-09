@@ -52,7 +52,6 @@ async def handle_check_vacancies(message: Message, vacancy: Vacancy, *args):
                 [
                     "CAACAgIAAxkBAAEMmw9msNROM8A5ywuyDTjoobwhmEvqCAACEg0AAtqrwUpUjHmjHVNcEjUE",
                     "CAACAgIAAxkBAAEMm9JmsguptxkU2xwf3g7mW-JKvuR67gACPQ0AAu7hYEki8vUJecaK4DUE",
-                    "CAACAgIAAxkBAAEMm9Rmsgut4PnLYYm0JJctuVxqfVr8OwACoQ4AAgkouErdJlk-PMSKuDUE",
                     "CAACAgIAAxkBAAEMm9BmsgtD1ihaAAFK_SexzLlE3XeXnZIAAlUMAAJTN1lJ7r4gyMng9Eg1BA",
                 ]
             )
@@ -64,6 +63,9 @@ async def handle_check_vacancies(message: Message, vacancy: Vacancy, *args):
 @vacancy_required
 async def handle_get_link(message: Message, vacancy: Vacancy, *args):
     """Handles the get link button."""
+    await message.answer_sticker(
+        "CAACAgIAAxkBAAEMm9Rmsgut4PnLYYm0JJctuVxqfVr8OwACoQ4AAgkouErdJlk-PMSKuDUE"
+    )
     await message.answer(get_url_with_params_for_(vacancy))
 
 
