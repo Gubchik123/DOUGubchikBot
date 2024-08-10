@@ -28,7 +28,7 @@ async def handle_help_command(message: Message, *args):
             "LinkedIn: https://www.linkedin.com/in/nikita-hubariev\n"
             "Instagram: https://www.instagram.com/notwhale.1746\n\n"
             "Інші проекти автора доступні на:\n"
-            "Дошка проектів: https://portfolio.hubariev.com\n"
+            "Портфоліо: https://portfolio.hubariev.com\n"
             "GitHub: https://github.com/Gubchik123\n"
         )
     )
