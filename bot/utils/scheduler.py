@@ -53,7 +53,9 @@ async def check_vacancies_by_(
                 "CAACAgIAAxkBAAEMmxFmsNSE4Px-mVRRHrHYZ38dm7JNSQAC-hAAAqHHKEg5ZXbrk1gHozUE",
             )
             await temp_bot.send_message(
-                vacancy.id_user_id, message_text, disable_web_page_preview=True
+                vacancy.id_user_id,
+                message_text[:4090],
+                disable_web_page_preview=True,
             )
             update_vacancy_with_(
                 user_chat_id=vacancy.id_user_id,
