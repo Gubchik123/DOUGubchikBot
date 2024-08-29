@@ -26,14 +26,15 @@ async def handle_start_command(message: Message, state: FSMContext, *args):
     try:
         user = message.from_user
         create_user_by_(user)
-        await _greet_user(message, user.full_name, state)
+    except IntegrityError:  # psycopg2.errors.UniqueViolation
+        await _greet_user(message, message.from_user.full_name, state)
+    else:
         if user.id not in ADMINS:
             asyncio.create_task(
                 send_to_admins(
                     f"🆕👤 {user.full_name} (<code>{user.id}</code>)."
                 )
             )
-    except IntegrityError:  # psycopg2.errors.UniqueViolation
         await _greet_user(message, message.from_user.full_name, state)
 
 
