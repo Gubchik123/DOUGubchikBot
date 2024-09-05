@@ -32,9 +32,8 @@ async def check_vacancies_by_(
     vacancy: Vacancy, temp_bot: Optional[Bot] = None
 ) -> bool:
     try:
-        vacancies = parse_dou_vacancies_from_(
-            url=get_url_with_params_for_(vacancy)
-        )
+        url = get_url_with_params_for_(vacancy)
+        vacancies = parse_dou_vacancies_from_(url=url)
         message_text = ""
         for vacancy_url, vacancy_data in vacancies.items():
             if vacancy_url in vacancy.last_job_urls:
@@ -66,7 +65,7 @@ async def check_vacancies_by_(
         delete_user_with_(vacancy.id_user_id)
     except Exception as error:
         await send_to_admins(
-            f"{str(error)} {str(error.__class__)[8:-2]} in checking vacancies",
+            f"{str(error)} {str(error.__class__)[8:-2]} in checking vacancies: {url}",
             get_traceback_file_path(),
             temp_bot=temp_bot,
         )
