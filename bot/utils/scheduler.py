@@ -43,7 +43,7 @@ async def check_vacancies_by_(
                 f"<a href='{vacancy_url}'>{vacancy_data['title']}</a> в "
                 f"<a href='{vacancy_data['company']['link']}'>"
                 f"{vacancy_data['company']['title']}</a>\n"
-                f"<i>{vacancy_data['city']}</i>\n"
+                f"<i>{vacancy_data['city']} {vacancy_data['salary']}</i>\n"
                 f"{vacancy_data['description']}\n---\n"
             )
         if message_text:

@@ -33,6 +33,8 @@ def _parse_(html: str):
     for vacancy in soup.find_all("li", class_="l-vacancy"):
         vacancy_link = vacancy.find("a", class_="vt")
         company_link = vacancy.find("a", class_="company")
+        city = vacancy.find("span", class_="cities")
+        salary = vacancy.find("span", class_="salary")
 
         vacancies[vacancy_link.get("href")] = {
             "date": vacancy.find("div", class_="date").text.strip(),
@@ -41,7 +43,8 @@ def _parse_(html: str):
                 "title": company_link.text.strip(),
                 "link": company_link.get("href"),
             },
-            "city": vacancy.find("span", class_="cities").text.strip(),
+            "city": city.text.strip() if city else "",
+            "salary": salary.text.strip() if salary else "",
             "description": vacancy.find("div", class_="sh-info").text.strip(),
         }
     return vacancies
