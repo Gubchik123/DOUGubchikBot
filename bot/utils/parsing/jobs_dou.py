@@ -11,7 +11,7 @@ from data.config import COOKIES, HEADERS
 
 def parse_dou_vacancies_from_(url: str):
     """Parses vacancies from DOU by the given params and language code."""
-    HEADERS["user-agent"] = generate_user_agent()
+    # HEADERS["user-agent"] = generate_user_agent()
     response = requests.get(url, headers=HEADERS, cookies=COOKIES)
 
     if response.ok:
