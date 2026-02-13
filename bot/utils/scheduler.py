@@ -35,6 +35,8 @@ async def check_vacancies_by_(
         url = get_url_with_params_for_(vacancy)
         vacancies = parse_dou_vacancies_from_(url=url)
         message_text = ""
+        max_length = 4096
+
         for vacancy_url, vacancy_data in vacancies.items():
             if vacancy_url in vacancy.last_job_urls:
                 break
@@ -46,6 +48,18 @@ async def check_vacancies_by_(
                 f"<i>{vacancy_data['city']} {vacancy_data['salary']}</i>\n"
                 f"{vacancy_data['description']}\n---\n"
             )
+        if len(message_text) > max_length:
+            message_text = ""
+            for vacancy_url, vacancy_data in vacancies.items():
+                if vacancy_url in vacancy.last_job_urls:
+                    break
+                message_text += (
+                    f"<b>{vacancy_data['date']}</b>\n"
+                    f"<a href='{vacancy_url}'>{vacancy_data['title']}</a> в "
+                    f"<a href='{vacancy_data['company']['link']}'>"
+                    f"{vacancy_data['company']['title']}</a>\n"
+                    f"<i>{vacancy_data['city']} {vacancy_data['salary']}</i>\n---\n"
+                )
         if message_text:
             await temp_bot.send_sticker(
                 vacancy.id_user_id,
@@ -53,7 +67,7 @@ async def check_vacancies_by_(
             )
             await temp_bot.send_message(
                 vacancy.id_user_id,
-                message_text[:4090],
+                message_text,
                 disable_web_page_preview=True,
             )
             update_vacancy_with_(
