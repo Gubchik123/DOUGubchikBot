@@ -75,6 +75,7 @@ async def check_vacancies_by_(
                 last_job_urls=",".join(vacancies.keys()),
             )
             return True
+        return False
     except TelegramForbiddenError:
         delete_user_with_(vacancy.id_user_id)
     except Exception as error:
@@ -83,4 +84,3 @@ async def check_vacancies_by_(
             get_traceback_file_path(),
             temp_bot=temp_bot,
         )
-    return False
